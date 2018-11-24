@@ -16,6 +16,7 @@ from __future__ import (absolute_import, division, print_function, unicode_liter
 __metaclass__ = type
 
 import docopt
+import humanize
 
 from s3_buckets_info import __version__
 from s3_buckets_info.analyzer import analyze_buckets
@@ -29,11 +30,13 @@ def main():
         return
 
     for bucket_info in analyze_buckets():
+        size = humanize.naturalsize(bucket_info['objects_size'])
+
         print('''
-Bucket "{name}":
-  Created at: {creation_date}
-  Number of files: {objects_num}
-  Total size of files: {objects_size}'''.format(**bucket_info))
+Bucket "{b[name]}":
+  Created at: {b[creation_date]}
+  Number of files: {b[objects_num]}
+  Total size of files: {objects_size}'''.format(b=bucket_info, objects_size=size))
 
 
 if __name__ == '__main__':

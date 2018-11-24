@@ -20,7 +20,8 @@ setup(
     packages=['s3_buckets_info'],
     install_requires=[
         'boto3',
-        'docopt'
+        'docopt',
+        'humanize'
     ],
     extras_require={
         'develop': ['ipython', 'pylint']
