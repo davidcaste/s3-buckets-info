@@ -42,6 +42,8 @@ def main():
             print(get_output(bucket_info))
     except Exception as e:
         raise SystemExit('Unknown error: {}.'.format(e.message))
+    except (KeyboardInterrupt, SystemExit):
+        raise SystemExit('')
 
 
 def _get_human_output(bucket_info):
