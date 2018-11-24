@@ -37,8 +37,11 @@ def main():
     else:
         get_output = _get_human_output
 
-    for bucket_info in analyze_buckets(args['BUCKET_NAME']):
-        print(get_output(bucket_info))
+    try:
+        for bucket_info in analyze_buckets(args['BUCKET_NAME']):
+            print(get_output(bucket_info))
+    except Exception as e:
+        raise SystemExit('Unknown error: {}.'.format(e.message))
 
 
 def _get_human_output(bucket_info):

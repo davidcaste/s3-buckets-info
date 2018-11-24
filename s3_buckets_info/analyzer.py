@@ -2,18 +2,22 @@ from __future__ import (absolute_import, division, print_function, unicode_liter
 __metaclass__ = type
 
 import boto3
+from botocore.exceptions import ClientError
 
 
 def analyze_buckets(buckets):
     if len(buckets) == 0:
-        client = boto3.client('s3')
-        response = client.list_buckets()
+        s3 = boto3.client('s3')
+        response = s3.list_buckets()
         bucket_names = [i['Name'] for i in response['Buckets']]
     else:
         bucket_names = buckets
 
     for name in bucket_names:
-        yield _get_bucket_info(name)
+        try:
+            yield _get_bucket_info(name)
+        except ClientError as e:
+            raise SystemExit('Error analyzing bucket "{}": {}.'.format(name, e.message))
 
 
 def _get_bucket_info(name):
