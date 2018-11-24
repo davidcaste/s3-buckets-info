@@ -3,7 +3,7 @@
 s3-buckets-info analyzes S3 buckets
 
 Usage:
-  s3-buckets-info [--json]
+  s3-buckets-info [--json] [BUCKET_NAME...]
   s3-buckets-info -h | --help
   s3-buckets-info -v | --version
 
@@ -37,7 +37,7 @@ def main():
     else:
         get_output = _get_human_output
 
-    for bucket_info in analyze_buckets():
+    for bucket_info in analyze_buckets(args['BUCKET_NAME']):
         print(get_output(bucket_info))
 
 
