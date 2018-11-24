@@ -8,8 +8,6 @@ def analyze_buckets():
     client = boto3.client('s3')
     response = client.list_buckets()
 
-    buckets_info = []
-
     for bucket in response['Buckets']:
         objects_num, objects_size = _get_bucket_info(bucket['Name'])
 
@@ -20,9 +18,7 @@ def analyze_buckets():
             'objects_size': objects_size
         }
 
-        buckets_info.append(bucket_info)
-
-    return buckets_info
+        yield bucket_info
 
 
 def _get_bucket_info(name):
