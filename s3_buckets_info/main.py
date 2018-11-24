@@ -3,17 +3,20 @@
 s3-buckets-info analyzes S3 buckets
 
 Usage:
-  s3-buckets-info
+  s3-buckets-info [--json]
   s3-buckets-info -h | --help
   s3-buckets-info -v | --version
 
 General options:
+  --json        Print output in json format
   -h --help     Show this help message and exit
   -v --version  Show program version and exit
 """
 
 from __future__ import (absolute_import, division, print_function, unicode_literals)
 __metaclass__ = type
+
+import json
 
 import docopt
 import humanize
@@ -29,14 +32,27 @@ def main():
         print('s3-buckets-info {}'.format(__version__))
         return
 
-    for bucket_info in analyze_buckets():
-        size = humanize.naturalsize(bucket_info['objects_size'])
+    if args['--json']:
+        get_output = _get_json_output
+    else:
+        get_output = _get_human_output
 
-        print('''
+    for bucket_info in analyze_buckets():
+        print(get_output(bucket_info))
+
+
+def _get_human_output(bucket_info):
+    size = humanize.naturalsize(bucket_info['objects_size'])
+
+    return '''
 Bucket "{b[name]}":
   Created at: {b[creation_date]}
   Number of files: {b[objects_num]}
-  Total size of files: {objects_size}'''.format(b=bucket_info, objects_size=size))
+  Total size of files: {objects_size}'''.format(b=bucket_info, objects_size=size)
+
+
+def _get_json_output(bucket_info):
+    return json.dumps(bucket_info, default=str)
 
 
 if __name__ == '__main__':
