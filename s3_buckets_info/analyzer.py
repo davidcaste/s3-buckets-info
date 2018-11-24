@@ -1,6 +1,8 @@
 from __future__ import (absolute_import, division, print_function, unicode_literals)
 __metaclass__ = type
 
+import sys
+
 import boto3
 from botocore.exceptions import ClientError
 
@@ -17,7 +19,7 @@ def analyze_buckets(buckets):
         try:
             yield _get_bucket_info(name)
         except ClientError as e:
-            raise SystemExit('Error analyzing bucket "{}": {}.'.format(name, e.message))
+            print('Error analyzing bucket "{}": {}.'.format(name, e.message), file=sys.stderr)
 
 
 def _get_bucket_info(name):
